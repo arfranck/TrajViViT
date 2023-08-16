@@ -61,7 +61,7 @@ class Trainer:
                 loss_evolution.append(loss.item())
                 loss.backward()
                 optimizer.step()
-                if type(scheduler) == NoamLR:
+                if isinstance(scheduler, NoamLR) == NoamLR:
                     scheduler.step()
 
             self.loss_evolution.append(loss_evolution)
