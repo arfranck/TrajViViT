@@ -6,7 +6,17 @@ Repository of the master's thesis of:\
 Nicolas Depré (GitHub: nicolasdepre)\
 Arthur Franck (GitHub: arthurfranck72)
 
-#
+
+## Files and Directory Structure
+
+- `data_creation.py`: Script for creating images with the desired size and annotated with the black box from the video frames.
+- `TrajViViT.py`: Defines the architecture of the trajViVit model using the transformer network.
+- `noam.py`: Implementation of the Noam learning rate scheduler.
+- `runner.py`: Script to open the data and call training process from CLI.
+- `train.py`: Script containing the training process of the trajViVit model.
+- `traj_dataset.py`: Custom dataset class for loading trajectory and image data.
+- `traj_plotter.ipynb`: Jupyter notebook providing tools for visualizing and analyzing trajectory predictions.
+- `README.md`: The current file, providing an overview of the project, its usage, and file descriptions.
 
 ## Usage
 
