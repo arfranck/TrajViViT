@@ -1,5 +1,5 @@
 from train import Trainer
-from TrajViViT import TrajViVit
+from trajViViT import TrajViVit
 from traj_dataset import TrajDataset
 from torch.utils.data import DataLoader
 from torch.optim import *
