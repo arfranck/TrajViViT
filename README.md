@@ -21,6 +21,7 @@ For technical reasons, the image sizes were reduced, the frames were transformed
 - `traj_dataset.py`: Custom dataset class for loading trajectory and image data.
 - `traj_plotter.ipynb`: Jupyter notebook providing tools for visualizing and analyzing trajectory predictions.
 - `README.md`: The current file, providing an overview of the project, its usage, and file descriptions.
+- `requirements.txt`: Contains the required python modules to run the project.
 
 ## Usage
 
