@@ -3,8 +3,8 @@
 TrajViViT: Trajectory forecasting with Video Vision Transformers on top-view image sequences
 
 Repository of the master's thesis of:\
-Nicolas Depré (GitHub: nicolasdepre)\
-Arthur Franck (GitHub: arthurfranck72)
+Nicolas Depré (GitHub: NicolasDepre)\
+Arthur Franck (GitHub: arfranck)
 
 We trained a modified Video Vision Transformer model for trajectory prediction on top-view image sequences. We used the Stanford Drone Dataset, which we modified, to train our model. You can doload the full dataset here: https://cvgl.stanford.edu/projects/uav_data/
 
