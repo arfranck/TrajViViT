@@ -31,7 +31,6 @@ import argparse
         15) model_depth
         16) n_heads
         17) mlp_dim
-        18) dim_head
         19) n_epoch
         20) teacher_forcing
 """
@@ -57,7 +56,6 @@ def parse_args():
     parser.add_argument('--model_depth', type=int, default=6, help='Depth of the model')
     parser.add_argument('--n_heads', type=int, default=8, help='Number of heads for the multi-head attention')
     parser.add_argument('--mlp_dim', type=int, default=2048, help='Dimension of the MLP in the Transformer')
-    parser.add_argument('--dim_head', type=int, default=64, help='Dimension of each head in the multi-head attention')
     parser.add_argument('--n_epoch', type=int, default=100, help='Number of epochs to train the model')
     parser.add_argument('--teacher_forcing', type=int, default=5, help='Number of epochs where teacher forcing is used')
     parser.add_argument('--name', type=str,default="",help="Name of the run on OneDB")
@@ -90,7 +88,6 @@ if __name__ == "__main__":
     model_depth = args.model_depth
     n_heads = args.n_heads
     mlp_dim = args.mlp_dim
-    dim_head = args.dim_head
     n_epoch = args.n_epoch
     teacher_forcing = args.teacher_forcing
     data_config = args.dataset
@@ -115,7 +112,7 @@ if __name__ == "__main__":
 
     model = TrajViVit(image_size=img_size, image_patch_size=patch_size, frames=n_prev,
                       frame_patch_size=patch_depth, dim=model_dimension, depth=model_depth, mlp_dim=mlp_dim,
-                      device=device, dim_head=dim_head, heads=n_heads)
+                      device=device, heads=n_heads)
 
     if optimizer_name == "adam":
         optimizer = Adam(model.parameters(), lr=lr)
