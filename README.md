@@ -3,8 +3,8 @@
 TrajViViT: Trajectory forecasting with Video Vision Transformers on top-view image sequences
 
 Repository of the master's thesis of:\
-Nicolas Depré (GitHub: nicolasdepre)\
-Arthur Franck (GitHub: arthurfranck72)
+Nicolas Depré (GitHub: NicolasDepre)\
+Arthur Franck (GitHub: arfranck)
 
 We trained a modified Video Vision Transformer model for trajectory prediction on top-view image sequences. We used the Stanford Drone Dataset, which we modified, to train our model. You can doload the full dataset here: https://cvgl.stanford.edu/projects/uav_data/
 
@@ -44,8 +44,8 @@ python3 runner.py [-h] [--batch_size BATCH_SIZE] [--lr LR] [--gpu GPU] [--optimi
                  [--n_next N_NEXT] [--n_prev N_PREV] [--train_prop TRAIN_PROP] [--val_prop VAL_PROP]
                  [--test_prop TEST_PROP] [--img_step IMG_STEP] [--model_dimension MODEL_DIMENSION]
                  [--patch_size PATCH_SIZE] [--img_size IMG_SIZE] [--block_size BLOCK_SIZE] [--patch_depth PATCH_DEPTH]
-                 [--model_depth MODEL_DEPTH] [--n_heads N_HEADS] [--mlp_dim MLP_DIM] [--dim_head DIM_HEAD]
-                 [--n_epoch N_EPOCH] [--teacher_forcing TEACHER_FORCING] [--name NAME] [--dataset DATASET]
+                 [--model_depth MODEL_DEPTH] [--n_heads N_HEADS] [--mlp_dim MLP_DIM] [--n_epoch N_EPOCH]
+                 [--teacher_forcing TEACHER_FORCING] [--name NAME] [--dataset DATASET]
                  [--scheduler SCHEDULER]
 ```
 
@@ -70,7 +70,6 @@ python3 runner.py [-h] [--batch_size BATCH_SIZE] [--lr LR] [--gpu GPU] [--optimi
 - `--model_depth MODEL_DEPTH`: Depth of the model.
 - `--n_heads N_HEADS`: Number of heads for the multi-head attention.
 - `--mlp_dim MLP_DIM`: Dimension of the MLP in the Transformer.
-- `--dim_head DIM_HEAD`: Dimension of each head in the multi-head attention.
 - `--n_epoch N_EPOCH`: Number of epochs to train the model.
 - `--teacher_forcing TEACHER_FORCING`: Number of epochs where teacher forcing is used.
 - `--name NAME`: Name of the run on OneDB.
@@ -79,5 +78,5 @@ python3 runner.py [-h] [--batch_size BATCH_SIZE] [--lr LR] [--gpu GPU] [--optimi
 
 ### Example
 ```bash
-python3 runner.py --batch_size 16 --lr 0.00001 --gpu 2 --optimizer_name adam --n_next 12 --n_prev 8 --train_prop 0.9 --val_prop 0.05 --test_prop 0.05 --img_step 12 --model_dimension 1024 --patch_size 8 --img_size 64 --patch_depth 4 --model_depth 6 --n_heads 8 --mlp_dim 2048 --dim_head 128 --n_epoch 100 --teacher_forcing 50 --block_size 4 --dataset dc1 --scheduler noam
+python3 runner.py --batch_size 16 --lr 0.00001 --gpu 2 --optimizer_name adam --n_next 12 --n_prev 8 --train_prop 0.9 --val_prop 0.05 --test_prop 0.05 --img_step 12 --model_dimension 1024 --patch_size 8 --img_size 64 --patch_depth 4 --model_depth 6 --n_heads 8 --mlp_dim 2048 --n_epoch 100 --teacher_forcing 50 --block_size 4 --dataset dc1 --scheduler noam
 ```
