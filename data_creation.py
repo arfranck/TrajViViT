@@ -1,13 +1,12 @@
 import os
 import pandas as pd
-import matplotlib.pyplot as plt
-import numpy as np
 from PIL import Image, ImageDraw
 import sys
 
+"""
+    data_creation.py is used to generate the dataset used by TrajViVit from the raw data of SDD
+"""
 
-
-#scene = "datasets/bookstore/video0"
 scene = sys.argv[1]
 print(scene)
 annotation_filename = scene + "/annotations.txt"

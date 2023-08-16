@@ -1,38 +1,39 @@
 from train import Trainer
-from model import SimpleViT
-import sys
+from model import TrajViVit
 from traj_dataset import TrajDataset
-from torch.utils.data import random_split, DataLoader
+from torch.utils.data import DataLoader
 from torch.optim import *
 from torch.nn import MSELoss
 from noam import NoamLR
 import torch
 import argparse
-import pandas as pd
+
 
 
 """
-Args:
-    1)  batch size
-    2)  learning rate
-    3)  gpu_id 
-    4)  optimizer ["adam","SGD"]
-    5)  n_next
-    6)  n_prev
-    7)  train_prop
-    8)  val_prop
-    9)  test_prop
-    10) img_step
-    11) model_dimension
-    12) patch_size (tuple like (16,16)) 
-    13) img_size (tuple like (64,64))
-    14) patch_depth
-    15) model_depth
-    16) n_heads
-    17) mlp_dim
-    18) dim_head
-    19) n_epoch
-    20) teacher_forcing
+    runner.py is used to easily run different configurations in CLI
+    
+    Args:
+        1)  batch size
+        2)  learning rate
+        3)  gpu_id 
+        4)  optimizer ["adam","SGD"]
+        5)  n_next
+        6)  n_prev
+        7)  train_prop
+        8)  val_prop
+        9)  test_prop
+        10) img_step
+        11) model_dimension
+        12) patch_size (tuple like (16,16)) 
+        13) img_size (tuple like (64,64))
+        14) patch_depth
+        15) model_depth
+        16) n_heads
+        17) mlp_dim
+        18) dim_head
+        19) n_epoch
+        20) teacher_forcing
 """
 
 def parse_args():
@@ -102,9 +103,6 @@ if __name__ == "__main__":
     folders = TrajDataset.conf_to_folders(data_config)
 
     data_folders = ["/waldo/walban/student_datasets/arfranck/SDD/scenes/" + folder + size for folder in folders]
-    
-    #dataset = TrajDataset(data_folders, trajs_index=trajs_index, n_prev=n_prev, n_next=n_next, img_step=img_step)
-    #train_data, validation_data, test_data = random_split(dataset, [train_prop, val_prop, test_prop],generator=torch.Generator().manual_seed(42))
 
     props = [train_prop, val_prop, test_prop]
     train_data = TrajDataset(data_folders, n_prev=n_prev, n_next=n_next, img_step=img_step, prop=props, part=0)
@@ -115,10 +113,10 @@ if __name__ == "__main__":
     val_loader = DataLoader(val_data, batch_size=batch_size, shuffle=True)
     test_loader = DataLoader(test_data, batch_size=batch_size, shuffle=True)
 
-    model = SimpleViT(image_size=img_size, image_patch_size=patch_size, frames=n_prev,
+    model = TrajViVit(image_size=img_size, image_patch_size=patch_size, frames=n_prev,
                       frame_patch_size=patch_depth, dim=model_dimension, depth=model_depth, mlp_dim=mlp_dim,
-                      device=device, dim_head=dim_head,heads=n_heads)
-    #model.load_state_dict(torch.load("/waldo/walban/student_datasets/arfranck/model_saves/epochs_100_lr_1e-05-30-05-2023-16:14:43.dict"))
+                      device=device, dim_head=dim_head, heads=n_heads)
+
     if optimizer_name == "adam":
         optimizer = Adam(model.parameters(), lr=lr)
     elif optimizer_name == "SGD":
@@ -129,7 +127,6 @@ if __name__ == "__main__":
         raise Exception(f"Optimiser {optimizer} is not handled")
 
 
-  
     if scheduler_config == 'fixed':
         scheduler = torch.optim.lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda epoch: 1)  # lr doesn't change over time
     elif scheduler_config == 'multistep_30_60':
@@ -152,35 +149,6 @@ if __name__ == "__main__":
     mse = MSELoss()
     criterion = MSELoss()
 
-    wandb_config = {
-            "device": device,
-            "train_prop": train_prop,
-            "test_prop": test_prop,
-            "val_prop": val_prop,
-            "lr": lr,
-            "optimizer": optimizer_name,
-            "epochs": n_epoch,
-            "batch_size": batch_size,
-            "lr": lr,
-            "teacher_forcing": teacher_forcing,
-            "image_size": img_size,
-            "block_size": block_size,
-            "patch_size": patch_size,
-            "n_prev": n_prev,
-            "n_next": n_next,
-            "img_step": img_step,
-            "model_dimension": model_dimension,
-            "model_depth": model_depth,
-            "mlp_dimension": mlp_dim,
-            "patch_depth": patch_depth,
-            "train_length": len(train_loader),
-            "val_length": len(val_loader),
-            "test_length": len(test_loader),
-            "heads": n_heads,
-            "name": name,
-            "dataset": data_config,
-            "scheduler": scheduler_config,
-        }
     configuration = {
 
         "model": model,
@@ -194,7 +162,6 @@ if __name__ == "__main__":
         "epochs": n_epoch,
         "lr": lr,
         "teacher_forcing": teacher_forcing,
-        "wandb_config": wandb_config
     }
 
     trainer = Trainer(**configuration)

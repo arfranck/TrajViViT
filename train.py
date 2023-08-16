@@ -1,16 +1,15 @@
-
 import torch
-import wandb
 from datetime import datetime
+from noam import NoamLR
 
 
 """
-TODO 
-    Save model 
+    Train Loop to train the TrajViVit model
 """
 class Trainer:
 
-    def __init__(self,model,device,train_data,test_data,val_data,criterion,optimizer,scheduler, epochs,lr,wandb_config,teacher_forcing=False):
+    def __init__(self, model, device, train_data, test_data, val_data, criterion, optimizer, scheduler, epochs, lr,
+                 teacher_forcing=False):
 
         self.model = model
         self.device = device
@@ -28,25 +27,6 @@ class Trainer:
         self.validation_evolution = []
         self.save_name = f"/waldo/walban/student_datasets/arfranck/model_saves/dim_{model.dim}_epochs_{epochs}_lr_{lr}-{datetime.now().strftime('%d-%m-%Y-%H:%M:%S')}.dict"
 
-        wandb_config["save_name"] = self.save_name
-        print("Init Wandb")
-
-        try:
-            wandb.init(
-                project = "thesis_official_runs",
-                config = wandb_config,
-                name = wandb_config['name']
-            )
-        except:
-            print("Error with wandb trying a second time")
-            wandb.init(
-                project = "thesis_official_runs",
-                config = wandb_config,
-                name = wandb_config['name']
-            )
-
-
-
     def train(self):
 
         optimizer = self.optimizer
@@ -60,57 +40,46 @@ class Trainer:
             model.train()
             for step, train_batch in enumerate(self.train_data):
                 update_step += 1
-                # Don't know if batch size is needed
 
                 X_train = train_batch["src"].to(self.device)
                 Y_train = train_batch["tgt"].to(self.device)
 
                 optimizer.zero_grad()
 
-                if epoch < self.teacher_forcing:
+                if epoch < self.teacher_forcing:  # Teacher Forcing approach
 
-                    pred = model(X_train,Y_train)
+                    pred = model(X_train, Y_train)
 
-                else: # Training with whole prediction
-
+                else:  # Autoregressive approach
                     future = None
                     n_next = Y_train.shape[1]
                     for k in range(n_next):
-                        pred,future = model(X_train,future,train=False)
+                        pred, future = model(X_train, future, train=False)
 
-                loss = criterion(pred,Y_train)
+                loss = criterion(pred, Y_train)
 
                 loss_evolution.append(loss.item())
                 loss.backward()
                 optimizer.step()
-                scheduler.step() #COMMENT IF NOT NOAM
-                wandb.log(
-                    {
-                        "train_loss": loss,
-                        "step": update_step,
-                        "lr": scheduler.get_last_lr()[0],
-                        "epoch":epoch
-                    }
-                )
+                if type(scheduler) == NoamLR:
+                    scheduler.step()
 
             self.loss_evolution.append(loss_evolution)
             if epoch % 10 == 0:
-                torch.save(model.state_dict(), self.save_name,_use_new_zipfile_serialization=False)
+                try:
+                    torch.save(model.state_dict(), self.save_name, _use_new_zipfile_serialization=False)
+                except:
+                    print("Could not save model")
             self.validation(epoch)
             scheduler.step()
 
         self.test()
         try:
-            torch.save(model.state_dict(), self.save_name,_use_new_zipfile_serialization=False)
+            torch.save(model.state_dict(), self.save_name, _use_new_zipfile_serialization=False)
         except:
             print("Could not save model")
-        #model_scripted = torch.jit.script(model) # Export to TorchScript
-        #model_scripted.save(self.save_name) # Save
 
-
-
-    def validation(self,epoch):
-
+    def validation(self, epoch):
 
         with torch.no_grad():
 
@@ -126,17 +95,10 @@ class Trainer:
 
                 future = None
                 for k in range(Y_val.shape[1]):
-                    pred,future = model(X_val,future,train=False)
+                    pred, future = model(X_val, future, train=False)
 
                 loss = criterion(pred, Y_val)
                 val_loss.append(loss)
-                wandb.log(
-                    {
-                        "val_loss": loss,
-                        "epoch": epoch
-                    }
-                )
-
             self.validation_evolution.append(val_loss)
 
     def test(self):
@@ -159,23 +121,3 @@ class Trainer:
                 loss = criterion(pred, Y_test)
 
                 self.test_evolution.append(loss)
-                wandb.log(
-                    {
-                        "test_loss": loss
-                    }
-                )
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
