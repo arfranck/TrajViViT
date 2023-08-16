@@ -6,6 +6,10 @@ Repository of the master's thesis of:\
 Nicolas Depré (GitHub: nicolasdepre)\
 Arthur Franck (GitHub: arthurfranck72)
 
+We trained a modified Video Vision Transformer model for trajectory prediction on top-view image sequences. We used the Stanford Drone Dataset, which we modified, to train our model. You can doload the full dataset here: https://cvgl.stanford.edu/projects/uav_data/
+
+For technical reasons, the image sizes were reduced, the frames were transformed to grayscale images and the targets were indicated with black boxes.
+
 
 ## Files and Directory Structure
 
