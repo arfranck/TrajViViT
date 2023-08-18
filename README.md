@@ -14,7 +14,7 @@ For technical reasons, the image sizes were reduced, the frames were transformed
 ## Files and Directory Structure
 
 - `data_creation.py`: Script for creating images with the desired size and annotated with the black box from the video frames.
-- `TrajViViT.py`: Defines the architecture of the trajViVit model using the transformer network.
+- `TrajViViT.py`: Defines the architecture of the trajViVit model using the transformer network. The base architecture is inspired from https://github.com/lucidrains/vit-pytorch/blob/main/vit_pytorch/simple_vit_3d.py
 - `noam.py`: Implementation of the Noam learning rate scheduler.
 - `runner.py`: Script to open the data and call training process from CLI.
 - `train.py`: Script containing the training process of the trajViVit model.
